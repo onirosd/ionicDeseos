@@ -1,22 +1,64 @@
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Component, ViewChild } from "@angular/core";
+import { Platform, Nav } from "ionic-angular";
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { TabsPage } from '../pages/tabs/tabs';
+import { HomePage } from "../pages/home/home";
+import { LoginPage } from "../pages/login/login";
+
+import { Authentication } from './auth';
+export interface MenuItem {
+    title: string;
+    component: any;
+    icon: string;
+
+}
 
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp {
-  rootPage:any = TabsPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
+export class MyApp {
+  @ViewChild(Nav) nav: Nav;
+
+  rootPage: any = LoginPage;
+  appMenuItems: Array<MenuItem>;
+  usuario : string;
+  usuarioJson :any;  
+  constructor(
+    public platform: Platform,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    public auth: Authentication
+  ) {
+    this.initializeApp();
+    
+    this.auth.activeUser.subscribe((_user)=>{
+    this.usuarioJson = _user;
+     
+    }) 
+
+    this.appMenuItems = [
+      {title: 'Tareas Diarias', component: HomePage, icon: 'calendar'}
+    ];
+  }
+
+  initializeApp() {
+      this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.statusBar.overlaysWebView(false);
+
     });
   }
+
+  openPage(page) {
+    this.nav.setRoot(page.component);
+  }
+
+  logoutAction() {
+    this.auth.doLogout();
+    this.nav.setRoot(LoginPage);
+  }
+
 }

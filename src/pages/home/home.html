@@ -1,9 +1,98 @@
+
+
+
 <ion-header>
-  <ion-navbar>
-    <ion-title>Lista de Pendientes</ion-title>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+       Modulo de marcación
+    </ion-title>
+    <ion-buttons end>
+  <!--     <button ion-button tappable (click)="presentNotifications($event)">
+        <ion-icon name="notifications"></ion-icon>
+      </button> -->
+      <button ion-button tappable >
+        <ion-icon name="cog"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h1>LISTA DE PENDIENTES</h1>
+<ion-content padding class="animated fadeIn common-bg">
+
+
+
+<ion-grid>
+  
+   <ion-row center>
+    <ion-col col-12>
+      <div class="text-center tevento"> Eventos a realizar a la fecha : <br> {{fechaactual}}</div>
+      <br><br>
+     </ion-col>
+  </ion-row>
+
+
+
+   <ion-row>
+    <ion-col col-7>Programación</ion-col>
+    <ion-col col-5>Estado</ion-col>
+  </ion-row>
+
+
+ <ion-row *ngFor="let data of globalArray;">
+    <ion-col col-7>
+      <b>{{data.titulo}}</b>
+      <i>{{data.obs}}</i><br> 
+      <i>{{data.horainicio}} - {{data.horafinal}} </i>
+    </ion-col>
+    <ion-col col-5>
+      <ion-badge item-end class="orange-bg" >{{data.Estado}}</ion-badge>
+      <br>
+      <b *ngIf="data.Estado == 'Pendiente'" id="{{data.codevento}}" text-right ion-text color="secondary" tappable (click)="marcacion($event)" class="bmarcar"><ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon> Marcar Ingreso</b>
+      
+      <b *ngIf="data.Estado == 'EnCurso'" id="{{data.codevento}}" text-right ion-text color="secondary" tappable (click)="marcacionSalida($event)" class="bmarcar"><ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon> Marcar Salida</b>
+
+    </ion-col>
+  </ion-row>
+<!-- 
+   <ion-row >
+    <ion-col col-7>
+      <b>Andamios y Seguridad</b>
+      <i>la victoria 415</i><br> 
+      <i>10:00am - 15:00pm</i>
+    </ion-col>
+    <ion-col col-5>
+      <ion-badge item-end class="green-bg">Completado</ion-badge>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col col-7>
+      <b>Copacitacion bticino</b>
+      <i>Juan de Arona 324</i><br> 
+      <i>08:00am - 12:00pm</i>
+    </ion-col>
+    <ion-col col-5>
+      <ion-badge item-end class="green-bg">Completado</ion-badge>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col col-7>
+      <b>Copacitacion Modasa</b>
+      <i>Lurin 345 </i><br> 
+      <i>08:00am - 15:00pm</i>
+    </ion-col>
+    <ion-col col-5>
+      <ion-badge item-end class="red-bg">Pendiente</ion-badge><br>
+      <b text-right ion-text color="secondary" tappable (click)="marcacion()" class="bmarcar"><ion-icon ios="ios-clipboard" md="md-clipboard"></ion-icon> Marcar</b>
+    
+    </ion-col>
+  </ion-row>
+ -->
+</ion-grid>
+
+
 </ion-content>
