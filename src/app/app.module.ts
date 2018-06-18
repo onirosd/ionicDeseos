@@ -27,6 +27,7 @@ import {TripsPage} from "../pages/trips/trips";
 import {LocalWeatherPage} from "../pages/local-weather/local-weather";
 
 import { Authentication } from './auth';
+import { Geolocation } from '@ionic-native/geolocation';
 // import services
 // end import services
 // end import services
@@ -79,6 +80,7 @@ import { Authentication } from './auth';
   providers: [
     Authentication,
     AuthService,
+    Geolocation,
     StatusBar,
     SplashScreen,
     ActivityService,

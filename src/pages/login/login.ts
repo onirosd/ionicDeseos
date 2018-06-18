@@ -15,7 +15,7 @@ export class LoginPage {
   resposeData : any;
   userData = {"identity":"", "password":""};
   localizacion2 : any;
-  constructor( private platform: Platform,  private geolocation:Geolocation, public aut:Authentication, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
+  constructor( public platform: Platform,  public geolocation:Geolocation, public aut:Authentication, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
     this.menu.swipeEnable(false);
      geolocation.getCurrentPosition().then(pos => {
         this.localizacion2 = 'lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude;
