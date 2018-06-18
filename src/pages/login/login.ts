@@ -1,8 +1,11 @@
 import {Component} from "@angular/core";
-import {NavController, AlertController, ToastController, MenuController} from "ionic-angular";
+import {NavController, AlertController, ToastController, MenuController, Platform} from "ionic-angular";
 import {HomePage} from "../home/home";
 import { AuthService } from '../../services/auth-service';
 import { Authentication } from '../../app/auth';
+
+import { Geolocation } from '@ionic-native/geolocation';
+
 
 @Component({
   selector: 'page-login',
@@ -11,9 +14,12 @@ import { Authentication } from '../../app/auth';
 export class LoginPage {
   resposeData : any;
   userData = {"identity":"", "password":""};
-
-  constructor(public aut:Authentication, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
+  localizacion2 : any;
+  constructor( private platform: Platform,  private geolocation:Geolocation, public aut:Authentication, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
     this.menu.swipeEnable(false);
+     geolocation.getCurrentPosition().then(pos => {
+        this.localizacion2 = 'lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude;
+     });
   }
 
 
