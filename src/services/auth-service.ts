@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 
+/*let apiUrl = 'http://181.224.225.51:8089/index.php/';*/
 let apiUrl = 'http://localhost:82/layherprob/index.php/';
 
 @Injectable()

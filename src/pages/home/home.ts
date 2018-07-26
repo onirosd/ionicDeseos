@@ -1,7 +1,8 @@
 import {Component} from "@angular/core";
-import {NavController, AlertController, ToastController, PopoverController, MenuController} from "ionic-angular";
+import {NavController, AlertController, ToastController, PopoverController, MenuController, Platform} from "ionic-angular";
 import { AuthService } from '../../services/auth-service';
 import { LoginPage } from '../login/login'; 
+import { LocationService } from '../../services/location-service';
 
 
 
@@ -17,13 +18,11 @@ export class HomePage {
   clases: any[];
   fechaactual :String;
   myarray = {};
-  marcaData = {"id":"",};
+  marcaData = {"id":"","coordenadas":""};
 
-
-
-  //globalArray : any;
+  localizacion : any;
  
-  constructor(public popoverCtrl: PopoverController, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
+  constructor( public platform: Platform, private loc:LocationService, public popoverCtrl: PopoverController, public nav: NavController, public forgotCtrl: AlertController, public menu: MenuController, public toastCtrl: ToastController, public authService:AuthService) {
  
    this.myarray = {
 
@@ -46,7 +45,7 @@ export class HomePage {
 
   }
 
-
+/* LISTAMOS EVENTOS */
   listamoseventos(enviar){
    
     this.authService.postData(enviar, "evnservice").then((result) =>{
@@ -70,10 +69,101 @@ export class HomePage {
 
   }
 
+ /* MARCACION DE INGRESO */
+  marcacion(_event) {
+      
+        let target = _event.target || _event.srcElement || _event.currentTarget;
+        let idEvento = target.id;
+        var bool=true;
 
-   eventMarcacion(id, tipo){
+       
+
+        let forgot = this.forgotCtrl.create({
+          title: 'Marcar Inicio de Evento',
+          message: "¿ Esta seguro que desea generar la marcación ?",
+          buttons: [
+            {
+              text: 'Cancelar',
+              handler: data => {
+                this.presentToastTop("Se cancelo la marcación! "); 
+              }
+            },
+            {
+              text: 'Marcar',
+              handler: data => {
+
+                  
+                  this.loc.getcoordenadas();
+                  this.loc.localizacion.subscribe((_coordenadas)=>{ 
+                   
+                    this.localizacion = _coordenadas;
+                   
+                  
+                  }); 
+                 
+                 this.eventMarcacion(idEvento,this.localizacion, "mcservice"); 
+              
+                
+
+              }
+            }
+          ]
+        });
+
+    forgot.present();
+  }
+ 
+ /* MARCACION DE SALIDA*/
+ marcacionSalida(_event) {
+      
+        let target = _event.target || _event.srcElement || _event.currentTarget;
+        let idEvento = target.id;
+
+        let forgot = this.forgotCtrl.create({
+          title: 'Marcar Salida de Evento',
+          message: "¿ Esta seguro que desea generar la marcación de salida ?",
+          buttons: [
+            {
+              text: 'Cancelar',
+              handler: data => {
+                this.presentToastTop("Se cancelo la marcación! "); 
+              }
+            },
+            {
+              text: 'Marcar',
+              handler: data => { 
+
+                  this.loc.getcoordenadas();
+                  this.loc.localizacion.subscribe((_coordenadas)=>{ 
+                   
+                    this.localizacion = _coordenadas;
+                   
+                  
+                  }); 
+                 
+                 this.eventMarcacion(idEvento,this.localizacion, "mcservicesal"); 
+
+              
+                 
+
+              }
+            }
+          ]
+        });
+
+    forgot.present();
+  }
+
+
+
+
+ /* EVENTO DE COMUNICACION CON EL SERVIDOR */
+
+   eventMarcacion(id,coordenadas, tipo){
         let mensaje = {"llave":false, "mensaje":""};
         this.marcaData.id = id;
+        this.marcaData.coordenadas = coordenadas;
+        
         this.authService.postData(this.marcaData, tipo).then((result) =>{
         this.respInsAsistencias = result;
         mensaje.llave           = this.respInsAsistencias.llave;
@@ -91,69 +181,9 @@ export class HomePage {
    }
 
   
-  marcacion(_event) {
-      
-        let target = _event.target || _event.srcElement || _event.currentTarget;
-        let idEvento = target.id;
-        let eventos :any;
-
-        let forgot = this.forgotCtrl.create({
-          title: 'Marcar Inicio de Evento',
-          message: "¿ Esta seguro que desea generar la marcación ?",
-          buttons: [
-            {
-              text: 'Cancelar',
-              handler: data => {
-                this.presentToastTop("Se cancelo la marcación! "); 
-              }
-            },
-            {
-              text: 'Marcar',
-              handler: data => {
-              
-                this.eventMarcacion(idEvento, "mcservice"); 
-
-              }
-            }
-          ]
-        });
-
-    forgot.present();
-  }
- 
- marcacionSalida(_event) {
-      
-        let target = _event.target || _event.srcElement || _event.currentTarget;
-        let idEvento = target.id;
-        let eventos :any;
-
-        let forgot = this.forgotCtrl.create({
-          title: 'Marcar Salida de Evento',
-          message: "¿ Esta seguro que desea generar la marcación de salida ?",
-          buttons: [
-            {
-              text: 'Cancelar',
-              handler: data => {
-                this.presentToastTop("Se cancelo la marcación! "); 
-              }
-            },
-            {
-              text: 'Marcar',
-              handler: data => {
-              
-                this.eventMarcacion(idEvento, "mcservicesal"); 
-
-              }
-            }
-          ]
-        });
-
-    forgot.present();
-  }
 
 
-
-
+ /* Mostramos mensaje en la cabecera */
  presentToastTop(msg) {
     let toast = this.toastCtrl.create({
                   message:  msg,
@@ -168,14 +198,16 @@ export class HomePage {
   }
 
 
+/* Mostramos mensaje en la parte Inferior */
   presentToast(msg) {
-    let toast = this.toastCtrl.create({
-      message: this.removeHTMLInfo(msg),
-      duration: 2000
+      let toast = this.toastCtrl.create({
+        message: this.removeHTMLInfo(msg),
+        duration: 2000
     });
     toast.present();
   }
 
+/* Quitamos los caracteres especiales*/
   removeHTMLInfo(value: string)
   {  
      if (value)

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild  } from "@angular/core";
 import { Platform, Nav } from "ionic-angular";
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -6,10 +6,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from "../pages/home/home";
 import { LoginPage } from "../pages/login/login";
-
 import { Authentication } from './auth';
 
-import { Geolocation } from '@ionic-native/geolocation';
 
 export interface MenuItem {
     title: string;
@@ -29,20 +27,16 @@ export class MyApp {
   appMenuItems: Array<MenuItem>;
   usuario : string;
   usuarioJson :any;  
-  localizacion : any;
+
+
   constructor(
     public platform: Platform,
-    public geolocation:Geolocation,
+
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public auth: Authentication
   ) {
     this.initializeApp();
-     
-      geolocation.getCurrentPosition().then(pos => {
-        this.localizacion = 'lat: ' + pos.coords.latitude + ', lon: ' + pos.coords.longitude;
-      });
-
     this.auth.activeUser.subscribe((_user)=>{
     this.usuarioJson = _user;
      

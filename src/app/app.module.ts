@@ -8,6 +8,7 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
 
 import { AuthService } from '../services/auth-service';
+import { LocationService } from '../services/location-service';
 import {ActivityService} from "../services/activity-service";
 import {TripService} from "../services/trip-service";
 import {WeatherProvider} from "../services/weather";
@@ -27,6 +28,7 @@ import {TripsPage} from "../pages/trips/trips";
 import {LocalWeatherPage} from "../pages/local-weather/local-weather";
 
 import { Authentication } from './auth';
+
 import { Geolocation } from '@ionic-native/geolocation';
 // import services
 // end import services
@@ -85,6 +87,7 @@ import { Geolocation } from '@ionic-native/geolocation';
     SplashScreen,
     ActivityService,
     TripService,
+    LocationService,
     WeatherProvider
   ]
 })
